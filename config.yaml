@@ -1,0 +1,30 @@
+rules_folder: rules
+run_every:
+  minutes: 15
+
+# ElastAlert will buffer results from the most recent
+# period of time, in case some log sources are not in real time
+buffer_time:
+  minutes: 15
+
+# The elasticsearch hostname for metadata writeback
+# Note that every rule can have it's own elasticsearch host
+es_host: 10.10.11.92
+es_port: 9200
+
+# The URL prefix for the Elasticsearch endpoint
+# es_url_prefix: elasticsearch
+
+# whether or not to connect to es_host using TLS
+use_ssl: False
+
+# Option basic-auth username and password for elasticsearch
+#es_username: someusername
+#es_password: somepassword
+
+writeback_index: elastalert_status
+
+# If an alert fails for some reason, ElastAlert will retry
+# sending the alert until this time period has elapsed
+alert_time_limit:
+  days: 2

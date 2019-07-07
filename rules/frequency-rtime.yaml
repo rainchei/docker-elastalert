@@ -1,0 +1,64 @@
+# Alert when the rate of events exceeds a threshold
+
+# (Required)
+# Rule name, must be unique
+name: Warning! Massive counts of response time which is greater than 0.2(s) in the last 15 minutes.
+
+# (Required)
+# Type of alert.
+# the frequency rule type alerts when num_events events occur with timeframe time
+type: frequency
+
+# (Required)
+# Index to search, wildcard supported
+index: vrstore.accesslogs-*
+
+# (Required, frequency specific)
+# Alert when this many documents matching the query occur within a timeframe
+num_events: 300
+
+# (Required, frequency specific)
+# num_events must occur within this amount of time to trigger an alert
+timeframe:
+  minutes: 15
+
+# (Required)
+# A list of Elasticsearch filters used for find events
+# These filters are joined with AND and nested in a filtered query
+# For more info: http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl.html
+filter:
+- range:
+    rtime:
+      from: 0.2
+      to: 100.0
+
+# (Required)
+# Define the timestamp_field to avoid the error of "no mapping of @timestamp"
+timestamp_field: "ts"
+
+# (Required)
+# The alert is use when a match is found
+alert:
+- "slack"
+slack_webhook_url:
+- "https://hooks.slack.com/services/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"
+
+# Counts of documents will be stored independently for each value of query_key
+# Only num_events documents, all with the same value of query_key, will trigger an alert
+query_key: "app"
+
+# Alert subject
+alert_subject: "{0} | {1} | {2} | {3} | {4} | rtime: {5}"
+alert_subject_args:
+- env
+- region
+- app
+- status
+- puri
+- rtime
+
+# Alert content
+# alert_text_type: exclude_fields
+
+# This will show the top counts for each value for certain fields
+top_count_keys: ["app", "rtime"]
